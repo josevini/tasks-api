@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class TasksController extends Controller
 {
+    public function test() {
+
+    }
+
     public function list($id) {
         $task = Task::firstWhere('id', $id);
         if (!empty($task)) {
@@ -37,8 +41,14 @@ class TasksController extends Controller
             ->setStatusCode(201);
     }
 
-    public function editTask($id) {
-        return 'Edit '.$id;
+    public function editTask(Request $request, Task $task) {
+        if ($request->input('name')) {
+            $task->name = $request->input('name');
+        }
+        if ($request->input('description')) {
+            $task->description = $request->input('description');
+        }
+        $task->save();
     }
 
     public function removeTask($id) {
