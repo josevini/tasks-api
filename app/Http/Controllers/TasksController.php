@@ -4,29 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class TasksController extends Controller
 {
-    public function test() {
-
-    }
-
-    public function list($id) {
-        $task = Task::firstWhere('id', $id);
-        if (!empty($task)) {
-            return response()
-                ->json($task)
-                ->header('Content-Type', 'application/json');
-        } else {
-            return response()
-                ->json([
-                    'code' => '404',
-                    'message' => 'Task not found!'
-                ])
-                ->header('Content-Type', 'application/json')
-                ->setStatusCode(404);
-        }
+    public function list(Task $task) {
+        return $task;
     }
 
     public function listAll() {
@@ -51,7 +33,7 @@ class TasksController extends Controller
         $task->save();
     }
 
-    public function removeTask($id) {
-        return 'Remove '.$id;
+    public function removeTask(Task $task) {
+        $task->delete();
     }
 }
