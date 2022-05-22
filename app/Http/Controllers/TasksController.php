@@ -28,14 +28,11 @@ class TasksController extends Controller
     }
 
     public function listAll() {
-        return Task::all();
+        return 'List all...';
     }
 
-    public function addTask(Request $request) {
-        $task = new Task;
-        $task->name = $request->input('name');
-        $task->description = $request->input('description');
-        $task->save();
+    public function addTask() {
+        return 'Add...';
     }
 
     public function editTask($id) {
