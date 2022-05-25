@@ -7,25 +7,49 @@ use Illuminate\Http\Request;
 
 class TasksController extends Controller
 {
-    public function list(Task $task) {
-        return $task;
+    private function getTask($column, $value) {
+        return Task::query()->firstWhere($column, $value);
+    }
+
+    public function list($id) {
+        $fetch = $this->getTask('id', $id);
+        if (empty($fetch)) {
+            return response()
+                ->json([
+                    'code' => '404',
+                    'message' => 'task not found'
+                ])->setStatusCode(404);
+        } else {
+            return response()->json($fetch);
+        }
     }
 
     public function listAll() {
-        return Task::all();
+        return response()->json(Task::all());
     }
 
     public function addTask(Request $request) {
-        Task::create($request->all());
-        return response()
-            ->json(Task::firstWhere('name', $request->input('name')))
-            ->header('Content-Type', 'application/json')
-            ->setStatusCode(201);
+        $fetch = $this->getTask('title', $request->input('title'));
+        if (!empty($fetch)) {
+            return response()
+                ->json([
+                    'code' => '422',
+                    'message' => 'title not available'
+                ])->setStatusCode(422);
+        } else {
+            Task::create([
+                'title' => $request->input('title'),
+                'description' => $request->input('description')
+            ]);
+            return response()
+                ->json($this->getTask('title', $request->input('title')))
+                ->setStatusCode(201);
+        }
     }
 
     public function editTask(Request $request, Task $task) {
-        if ($request->input('name')) {
-            $task->name = $request->input('name');
+        if ($request->input('title')) {
+            $task->title = $request->input('title');
         }
         if ($request->input('description')) {
             $task->description = $request->input('description');
