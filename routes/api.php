@@ -26,4 +26,4 @@ Route::patch('/task/edit/{task}', [\App\Http\Controllers\TasksController::class,
 
 Route::delete('/task/remove/{task}', [\App\Http\Controllers\TasksController::class, 'removeTask']);
 
-Route::get('/task/{task}', [\App\Http\Controllers\TasksController::class, 'list']);
+Route::get('/task/{id}', [\App\Http\Controllers\TasksController::class, 'list']);
