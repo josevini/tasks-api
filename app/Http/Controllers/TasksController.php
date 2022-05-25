@@ -33,28 +33,44 @@ class TasksController extends Controller
         if (!empty($fetch)) {
             return response()
                 ->json([
-                    'code' => '422',
+                    'code' => 422,
                     'message' => 'title not available'
                 ])->setStatusCode(422);
         } else {
-            Task::create([
-                'title' => $request->input('title'),
-                'description' => $request->input('description')
-            ]);
+            Task::create($request->all());
             return response()
                 ->json($this->getTask('title', $request->input('title')))
                 ->setStatusCode(201);
         }
     }
 
-    public function editTask(Request $request, Task $task) {
-        if ($request->input('title')) {
-            $task->title = $request->input('title');
+    public function editTask(Request $request, $id) {
+        $task = $this->getTask('id', $id);
+        if (empty($task)) {
+            return response()
+                ->json([
+                    'code' => 404,
+                    'message' => 'task not found'
+                ]);
+        } else {
+            $fetch = $this->getTask('title', $request->input('title'));
+            if (!empty($fetch) && $id != $fetch->id) {
+                return response()
+                    ->json([
+                        'code' => 422,
+                        'message' => 'title not available'
+                    ])->setStatusCode(422);
+            } else {
+                if ($request->input('title')) {
+                    $task->title = $request->input('title');
+                }
+                if ($request->input('description')) {
+                    $task->description = $request->input('description');
+                }
+                $task->save();
+                return Task::query()->find($id);
+            }
         }
-        if ($request->input('description')) {
-            $task->description = $request->input('description');
-        }
-        $task->save();
     }
 
     public function removeTask(Task $task) {
