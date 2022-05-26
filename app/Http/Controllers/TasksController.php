@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 
 class TasksController extends Controller
 {
-    private function getTask($column, $value) {
+    private function getTask($column, $value)
+    {
         return Task::query()->firstWhere($column, $value);
     }
 
-    public function list($id) {
+    public function list($id)
+    {
         $fetch = $this->getTask('id', $id);
         if (empty($fetch)) {
             return response()
@@ -24,11 +26,13 @@ class TasksController extends Controller
         }
     }
 
-    public function listAll() {
+    public function listAll()
+    {
         return response()->json(Task::all());
     }
 
-    public function addTask(Request $request) {
+    public function addTask(Request $request)
+    {
         $fetch = $this->getTask('title', $request->input('title'));
         if (!empty($fetch)) {
             return response()
@@ -44,7 +48,8 @@ class TasksController extends Controller
         }
     }
 
-    public function editTask(Request $request, $id) {
+    public function editTask(Request $request, $id)
+    {
         $task = $this->getTask('id', $id);
         if (empty($task)) {
             return response()
@@ -73,7 +78,22 @@ class TasksController extends Controller
         }
     }
 
-    public function removeTask(Task $task) {
-        $task->delete();
+    public function deleteTask($id)
+    {
+        $task = $this->getTask('id', $id);
+        if (empty($task)) {
+            return response()
+                ->json([
+                    'code' => 404,
+                    'message' => 'task not found'
+                ])->setStatusCode(404);
+        } else {
+            $task->forceDelete();
+            return response()
+                ->json([
+                    'code' => 200,
+                    'message' => 'task deleted'
+                ]);
+        }
     }
 }
