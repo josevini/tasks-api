@@ -56,7 +56,7 @@ class TasksController extends Controller
                 ->json([
                     'code' => 404,
                     'message' => 'task not found'
-                ]);
+                ])->setStatusCode(404);
         } else {
             $fetch = $this->getTask('title', $request->input('title'));
             if (!empty($fetch) && $id != $fetch->id) {
