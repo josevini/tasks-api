@@ -22,7 +22,7 @@ Route::get('/task/all', [\App\Http\Controllers\TasksController::class, 'listAll'
 
 Route::post('/task/add', [\App\Http\Controllers\TasksController::class, 'addTask']);
 
-Route::patch('/task/edit/{id}', [\App\Http\Controllers\TasksController::class, 'editTask']);
+Route::put('/task/edit/{id}', [\App\Http\Controllers\TasksController::class, 'editTask']);
 
 Route::delete('/task/remove/{id}', [\App\Http\Controllers\TasksController::class, 'deleteTask']);
 
